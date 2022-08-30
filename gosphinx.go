@@ -135,12 +135,51 @@ var DefaultOptions = &Options{
 	GroupSort:  "@group desc",
 	MaxMatches: 1000,
 	Timeout:    1000,
-	RankMode:   SPH_RANK_PROXIMITY_BM25,
+	RankMode:   SPH_RANK_PROXIMITY_BM15,
 	Select:     "*",
 }
 
 func NewClient(opts ...*Options) (sc *Client) {
-	if opts != nil {
+	if len(opts) > 0 {
+		if opts[0].Host == "" {
+			opts[0].Host = DefaultOptions.Host
+		}
+		if opts[0].Port == 0 {
+			opts[0].Port = DefaultOptions.Port
+		}
+		if opts[0].SqlPort == 0 {
+			opts[0].SqlPort = DefaultOptions.SqlPort
+		}
+		if opts[0].Limit == 0 {
+			opts[0].Limit = DefaultOptions.Limit
+		}
+		if opts[0].QueryFlags == 0 {
+			opts[0].QueryFlags = DefaultOptions.QueryFlags
+		}
+		if opts[0].MatchMode == 0 {
+			opts[0].MatchMode = DefaultOptions.MatchMode
+		}
+		if opts[0].SortMode == 0 {
+			opts[0].SortMode = DefaultOptions.SortMode
+		}
+		if opts[0].GroupFunc == 0 {
+			opts[0].GroupFunc = DefaultOptions.GroupFunc
+		}
+		if opts[0].GroupSort == "" {
+			opts[0].GroupSort = DefaultOptions.GroupSort
+		}
+		if opts[0].MaxMatches == 0 {
+			opts[0].MaxMatches = DefaultOptions.MaxMatches
+		}
+		if opts[0].Timeout == 0 {
+			opts[0].Timeout = DefaultOptions.Timeout
+		}
+		if opts[0].RankMode == 0 {
+			opts[0].RankMode = DefaultOptions.RankMode
+		}
+		if opts[0].Select == "" {
+			opts[0].Select = DefaultOptions.Select
+		}
 		return &Client{Options: opts[0]}
 	}
 	return &Client{Options: DefaultOptions}
@@ -379,7 +418,7 @@ func (sc *Client) SetRankingMode(ranker int, rankexpr ...string) *Client {
 }
 
 func (sc *Client) SetSortMode(mode int, sortBy string) *Client {
-	if mode < 0 || mode > SPH_SORT_EXPR {
+	if mode < 0 || mode > SPH_SORT_EXTENDED {
 		sc.err = fmt.Errorf("SetSortMode > unknown mode value; use one of the available SPH_SORT_xxx constants: %d", mode)
 		return sc
 	}

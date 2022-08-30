@@ -19,14 +19,8 @@ func init() {
 
 	// host := "9.138.24.138"
 	opts := &Options{
-		Host:       host,
-		Port:       9312,
-		Timeout:    5000,
-		MaxMatches: 1000,
-		MatchMode:  6,
-		Limit:      20,
-		GroupSort:  "@group desc",
-		Select:     "*",
+		Host: host,
+		Port: 9312,
 	}
 
 	sc = NewClient(opts)

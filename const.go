@@ -1,7 +1,16 @@
 package gosphinx
 
-/* searchd command versions for 3.x */
 const (
+	// known searchd commands
+	SEARCHD_COMMAND_SEARCH     = 0
+	SEARCHD_COMMAND_EXCERPT    = 1
+	SEARCHD_COMMAND_UPDATE     = 2
+	SEARCHD_COMMAND_KEYWORDS   = 3
+	SEARCHD_COMMAND_PERSIST    = 4
+	SEARCHD_COMMAND_STATUS     = 5
+	SEARCHD_COMMAND_FLUSHATTRS = 7
+
+	// current client-side command implementation versions
 	VER_MAJOR_PROTO        = 0x1
 	VER_COMMAND_SEARCH     = 0x120
 	VER_COMMAND_EXCERPT    = 0x104
@@ -9,90 +18,68 @@ const (
 	VER_COMMAND_KEYWORDS   = 0x100
 	VER_COMMAND_STATUS     = 0x101
 	VER_COMMAND_FLUSHATTRS = 0x100
-)
 
-/* matching modes */
-const (
-	SPH_MATCH_ALL = iota
-	SPH_MATCH_ANY
-	SPH_MATCH_PHRASE
-	SPH_MATCH_BOOLEAN
-	SPH_MATCH_EXTENDED
-	SPH_MATCH_FULLSCAN
-	SPH_MATCH_EXTENDED2
-)
+	// known searchd status codes
+	SEARCHD_OK      = 0
+	SEARCHD_ERROR   = 1
+	SEARCHD_RETRY   = 2
+	SEARCHD_WARNING = 3
 
-/* ranking modes (extended2 only) */
-const (
-	SPH_RANK_PROXIMITY_BM25 = iota // Default mode, phrase proximity major factor and BM25 minor one
-	SPH_RANK_BM25
-	SPH_RANK_NONE
-	SPH_RANK_WORDCOUNT
-	SPH_RANK_PROXIMITY
-	SPH_RANK_MATCHANY
-	SPH_RANK_FIELDMASK
-	SPH_RANK_SPH04
-	SPH_RANK_EXPR
-	SPH_RANK_TOTAL
-)
+	// known ranking modes (extended2 mode only)
+	SPH_RANK_PROXIMITY_BM15 = 0 // default mode, phrase proximity major factor and BM15 minor one
+	SPH_RANK_BM15           = 1 // statistical mode, BM15 ranking only (faster but worse quality)
+	SPH_RANK_NONE           = 2 // no ranking, all matches get a weight of 1
+	SPH_RANK_WORDCOUNT      = 3 // simple word-count weighting, rank is a weighted sum of per-field keyword occurence counts
+	SPH_RANK_PROXIMITY      = 4
+	SPH_RANK_MATCHANY       = 5
+	SPH_RANK_FIELDMASK      = 6
+	SPH_RANK_SPH04          = 7
+	SPH_RANK_EXPR           = 8
+	SPH_RANK_TOTAL          = 9
 
-/* sorting modes */
-const (
-	SPH_SORT_RELEVANCE = iota
-	SPH_SORT_ATTR_DESC
-	SPH_SORT_ATTR_ASC
-	SPH_SORT_TIME_SEGMENTS
-	SPH_SORT_EXTENDED
-	SPH_SORT_EXPR // Deprecated, never use it.
-)
+	// aliases; to be retired
+	SPH_RANK_PROXIMITY_BM25 = 0
+	SPH_RANK_BM25           = 1
 
-/* grouping functions */
-const (
-	SPH_GROUPBY_DAY = iota
-	SPH_GROUPBY_WEEK
-	SPH_GROUPBY_MONTH
-	SPH_GROUPBY_YEAR
-	SPH_GROUPBY_ATTR
-	SPH_GROUPBY_ATTRPAIR
-)
+	// known sort modes
+	SPH_SORT_RELEVANCE     = 0
+	SPH_SORT_ATTR_DESC     = 1
+	SPH_SORT_ATTR_ASC      = 2
+	SPH_SORT_TIME_SEGMENTS = 3
+	SPH_SORT_EXTENDED      = 4
 
-/* searchd reply status codes */
-const (
-	SEARCHD_OK = iota
-	SEARCHD_ERROR
-	SEARCHD_RETRY
-	SEARCHD_WARNING
-)
+	// known filter types
+	SPH_FILTER_VALUES      = 0
+	SPH_FILTER_RANGE       = 1
+	SPH_FILTER_FLOATRANGE  = 2
+	SPH_FILTER_STRING      = 3
+	SPH_FILTER_STRING_LIST = 6
 
-/* attribute types */
-const (
-	SPH_ATTR_NONE = iota
-	SPH_ATTR_INTEGER
-	SPH_ATTR_TIMESTAMP
-	SPH_ATTR_ORDINAL
-	SPH_ATTR_BOOL
-	SPH_ATTR_FLOAT
-	SPH_ATTR_BIGINT
-	SPH_ATTR_STRING
+	// known attribute types
+	SPH_ATTR_NONE    = 0
+	SPH_ATTR_INTEGER = 1
+	SPH_ATTR_BOOL    = 4
+	SPH_ATTR_FLOAT   = 5
+	SPH_ATTR_BIGINT  = 6
+	SPH_ATTR_STRING  = 7
+	SPH_ATTR_FACTORS = 1001
 	SPH_ATTR_MULTI   = 0x40000001
 	SPH_ATTR_MULTI64 = 0x40000002
-)
 
-/* searchd commands */
-const (
-	SEARCHD_COMMAND_SEARCH = iota
-	SEARCHD_COMMAND_EXCERPT
-	SEARCHD_COMMAND_UPDATE
-	SEARCHD_COMMAND_KEYWORDS
-	SEARCHD_COMMAND_PERSIST
-	SEARCHD_COMMAND_STATUS
-	SEARCHD_COMMAND_QUERY
-	SEARCHD_COMMAND_FLUSHATTRS
-)
+	// known grouping functions
+	SPH_GROUPBY_DAY      = 0
+	SPH_GROUPBY_WEEK     = 1
+	SPH_GROUPBY_MONTH    = 2
+	SPH_GROUPBY_YEAR     = 3
+	SPH_GROUPBY_ATTR     = 4
+	SPH_GROUPBY_ATTRPAIR = 5
 
-/* filter types */
-const (
-	SPH_FILTER_VALUES = iota
-	SPH_FILTER_RANGE
-	SPH_FILTER_FLOATRANGE
+	// known match modes
+	SPH_MATCH_ALL       = 0
+	SPH_MATCH_ANY       = 1
+	SPH_MATCH_PHRASE    = 2
+	SPH_MATCH_BOOLEAN   = 3
+	SPH_MATCH_EXTENDED  = 4
+	SPH_MATCH_FULLSCAN  = 5
+	SPH_MATCH_EXTENDED2 = 6
 )

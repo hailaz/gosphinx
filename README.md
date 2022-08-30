@@ -11,4 +11,4 @@ golang 适配 sphinx 3.x
 
 [github.com/yunge/sphinx](https://github.com/yunge/sphinx)
 
-[sphinxapi.py](doc\sphinxapi.py)
+[sphinxapi.py](doc/sphinxapi.py)

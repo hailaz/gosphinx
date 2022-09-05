@@ -1287,6 +1287,18 @@ func (sc *Client) Close() error {
 	return nil
 }
 
+func (sc *Client) ReOpen() error {
+	if err := sc.Close(); err != nil {
+		return fmt.Errorf("ReOpen close error: %v", err)
+	}
+
+	if err := sc.Open(); err != nil {
+		return fmt.Errorf("ReOpen open error: %v", err)
+	}
+
+	return nil
+}
+
 func (sc *Client) doRequest(command int, version int, req []byte) (res []byte, err error) {
 	sc.Lock()
 	defer sc.Unlock()
@@ -1308,10 +1320,17 @@ func (sc *Client) doRequest(command int, version int, req []byte) (res []byte, e
 	req = append(cmdVerLen, req...)
 	_, err = sc.conn.Write(req)
 	if err != nil {
-		sc.connerror = true
 		if errors.Is(err, syscall.EPIPE) {
-			return nil, fmt.Errorf("syscall.EPIPE conn.Write error: %v", err)
+			if err = sc.ReOpen(); err != nil {
+				return nil, err
+			}
+			_, err = sc.conn.Write(req)
+			if err != nil {
+				sc.connerror = true
+				return nil, fmt.Errorf("conn.Write error again: %v", err)
+			}
 		}
+		sc.connerror = true
 		return nil, fmt.Errorf("conn.Write error: %v", err)
 	}
 

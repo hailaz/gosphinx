@@ -8,6 +8,7 @@ import (
 	"io"
 	"net"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -1195,6 +1196,7 @@ func (sc *Client) FlushAttributes() (iFlushTag int, err error) {
 
 func (sc *Client) connect() (err error) {
 	if sc.conn != nil {
+		// TODO 连接还是否可用
 		return
 	}
 
@@ -1302,6 +1304,9 @@ func (sc *Client) doRequest(command int, version int, req []byte) (res []byte, e
 	_, err = sc.conn.Write(req)
 	if err != nil {
 		sc.connerror = true
+		if errors.Is(err, syscall.EPIPE) {
+			return nil, fmt.Errorf("syscall.EPIPE conn.Write error: %v", err)
+		}
 		return nil, fmt.Errorf("conn.Write error: %v", err)
 	}
 

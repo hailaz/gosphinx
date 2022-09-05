@@ -1199,7 +1199,6 @@ func (sc *Client) FlushAttributes() (iFlushTag int, err error) {
 
 func (sc *Client) connect() (err error) {
 	if sc.conn != nil {
-		// TODO 连接还是否可用
 		return
 	}
 
@@ -1329,9 +1328,10 @@ func (sc *Client) doRequest(command int, version int, req []byte) (res []byte, e
 				sc.connerror = true
 				return nil, fmt.Errorf("conn.Write error again: %v", err)
 			}
+		} else {
+			sc.connerror = true
+			return nil, fmt.Errorf("conn.Write error: %v", err)
 		}
-		sc.connerror = true
-		return nil, fmt.Errorf("conn.Write error: %v", err)
 	}
 
 	header := make([]byte, 8)

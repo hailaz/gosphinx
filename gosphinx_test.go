@@ -42,8 +42,30 @@ func TestInitClient(t *testing.T) {
 
 	for _, row := range status {
 		fmt.Printf("%20s:\t%s\n", row[0], row[1])
+		break
 	}
 
+}
+
+// BenchmarkCanGO 测试是否并发安全
+//
+// createTime: 2022-09-05 16:19:10
+//
+// author: hailaz
+func BenchmarkCanGO(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			status, err := sc.Status()
+			if err != nil {
+				b.Fatalf("Error: %s\n", err)
+			}
+
+			for _, row := range status {
+				fmt.Printf("%20s:\t%s\n", row[0], row[1])
+				break
+			}
+		}
+	})
 }
 
 func TestQuery(t *testing.T) {

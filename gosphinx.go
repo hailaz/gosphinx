@@ -8,6 +8,7 @@ import (
 	"io"
 	"net"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 )
@@ -117,6 +118,8 @@ type Client struct {
 	indexWeights map[string]int
 	fieldWeights map[string]int
 	overrides    map[string]override
+
+	sync.Mutex
 
 	// For sphinxql
 	DB *sql.DB // Capitalize, so that can "defer sc.Db.Close()"
@@ -1285,6 +1288,8 @@ func (sc *Client) Close() error {
 }
 
 func (sc *Client) doRequest(command int, version int, req []byte) (res []byte, err error) {
+	sc.Lock()
+	defer sc.Unlock()
 	defer func() {
 		if x := recover(); x != nil {
 			res = nil

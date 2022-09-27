@@ -31,9 +31,9 @@ type override struct {
 }
 
 type Match struct {
-	DocId      uint64                   // Matched document ID.
-	Weight     int                      // Matched document weight.
-	AttrValues []map[string]interface{} // Matched document attribute values.
+	DocId      uint64                 // Matched document ID.
+	Weight     int                    // Matched document weight.
+	AttrValues map[string]interface{} // Matched document attribute values.
 }
 
 type WordInfo struct {
@@ -808,13 +808,12 @@ func (sc *Client) RunQueries() (results []Result, err error) {
 			}
 			match.Weight = bp.Int32()
 
-			match.AttrValues = make([]map[string]interface{}, nattrs)
+			match.AttrValues = make(map[string]interface{})
 
 			for attrNum := 0; attrNum < len(result.AttrTypes); attrNum++ {
 				attrName := result.AttrNames[attrNum]
 				attrType := result.AttrTypes[attrNum]
 				var attrValue interface{}
-				match.AttrValues[attrNum] = make(map[string]interface{})
 				switch attrType {
 				case SPH_ATTR_BIGINT:
 					attrValue = bp.Uint64()
@@ -845,7 +844,7 @@ func (sc *Client) RunQueries() (results []Result, err error) {
 				default: // handle everything else as unsigned ints
 					attrValue = bp.Uint32()
 				}
-				match.AttrValues[attrNum][attrName] = attrValue
+				match.AttrValues[attrName] = attrValue
 			}
 			result.Matches[matchesNum] = match
 		}
